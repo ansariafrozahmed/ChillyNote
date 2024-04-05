@@ -26,8 +26,10 @@ const EmployeeLoginForm: React.FC = () => {
                 },
                 body: JSON.stringify(values),
             });
+
             const data = await response.json();
-            if (data.status === 200) {
+
+            if (response.ok) {
                 // Set the token in a cookie
                 Swal.fire({
                     icon: 'success',
@@ -42,27 +44,37 @@ const EmployeeLoginForm: React.FC = () => {
                 setTimeout(() => {
                     router.push('/employee');
                 }, 2000);
-            } else if (response.status === 400) {
-                Swal.fire({
-                    title: 'Invalid Email',
-                    text: 'Please try Again',
-                    icon: 'error',
-                });
-            } else if (response.status === 401) {
-                Swal.fire({
-                    title: 'Invalid Password',
-                    text: 'Please try Again',
-                    icon: 'error',
-                });
             } else {
-                Swal.fire({
-                    title: 'Something Went Wrong',
-                    text: 'Please try Again',
-                    icon: 'error',
-                });
+                // Log the error response body
+                console.log(await response.text());
+
+                if (response.status === 400) {
+                    Swal.fire({
+                        title: 'Invalid Email',
+                        text: 'Please try Again',
+                        icon: 'error',
+                    });
+                } else if (response.status === 401) {
+                    Swal.fire({
+                        title: 'Invalid Password',
+                        text: 'Please try Again',
+                        icon: 'error',
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Something Went Wrong',
+                        text: 'Please try Again',
+                        icon: 'error',
+                    });
+                }
             }
         } catch (error) {
-            console.log(error);
+            console.error('Error:', error);
+            Swal.fire({
+                title: 'Something Went Wrong',
+                text: 'Please try Again',
+                icon: 'error',
+            });
         } finally {
             setSubmitting(false);
         }

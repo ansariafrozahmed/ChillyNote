@@ -208,6 +208,7 @@ const EmployeesTable: React.FC = () => {
                 });
 
                 if (response.ok) {
+                    setIsModalOpen(false);
                     Swal.fire({
                         title: 'Success',
                         text: 'Employee Added & Notified on Mail!',

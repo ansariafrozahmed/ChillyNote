@@ -394,15 +394,39 @@ app.get(
 );
 
 //GET Project Detail by ID
-app.post("/api/projectDetail", authenticate, async (req, res) => {
+app.post("/api/projectDetail", async (req, res) => {
   const { pid } = req.body;
   try {
-    const query = "SELECT * FROM all_projects WHERE project_id=$1";
+    const query = `
+      SELECT 
+        ap.*,
+        json_agg(json_build_object(
+          'employee_name', ae.employee_name,
+          'employee_email', ae.employee_email,
+          'employee_id', ae.employee_id,
+          'employee_designation', ae.employee_designation
+        )) AS assigned_employees
+      FROM 
+        all_projects ap
+      JOIN 
+        all_employees ae ON ae.employee_id = ANY(ap.assigned_employee_id)
+      WHERE 
+        ap.project_id=$1
+      GROUP BY 
+        ap.project_id
+    `;
     const result = await pool.query(query, [pid]);
     if (result.rowCount === 0) {
       return res.status(404).send("Project Not Found");
     }
-    res.status(200).send(result.rows[0]);
+    const projectData = result.rows[0];
+    // Check if assigned_employees is already a string
+    if (typeof projectData.assigned_employees === "string") {
+      projectData.assigned_employees = JSON.parse(
+        projectData.assigned_employees
+      );
+    }
+    res.status(200).json(projectData);
   } catch (error) {
     console.log(error);
     res.status(500).send("Internal Server Error");

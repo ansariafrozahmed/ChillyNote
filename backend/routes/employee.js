@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const app = express();
 const jwt = require("jsonwebtoken");
 const authenticate = require("../lib");
+const sendEmail = require("../lib/email");
 
 //LOGIN Employee API
 app.post("/api/EmployeeLogin", async (req, res) => {
@@ -95,7 +96,32 @@ app.post("/api/addEmployees", authenticate, async (req, res) => {
       employee_role,
     ]);
 
-    res.status(200).send("Success!");
+    // Send email notification with login credentials
+    const emailSubject = "Welcome to the Company!";
+    const emailContent = `
+      <p>Dear ${employee_name},</p>
+      <p>You have been successfully added as an employee. Here are your login credentials:</p>
+      <p>Email: ${employee_email}</p>
+      <p>Password: ${employee_password}</p>
+      <p>Employee Id: ${employee_id}</p>
+      <p>Designation: ${employee_designation}</p>
+      <p>Role: ${employee_role}</p>
+      <p>Please keep your credentials safe and do not share them with anyone.</p>
+      <p><a href=${process.env.FRONTEND_URL}/employee-login>login to your employee account</a></p>
+      <p>Best regards,<br>Your Company</p>
+    `;
+
+    const emailResponse = await sendEmail(
+      employee_email,
+      emailSubject,
+      emailContent
+    );
+
+    if (emailResponse.success) {
+      res.status(200).send("Employee added successfully and email sent!");
+    } else {
+      res.status(500).send("Failed to send email");
+    }
   } catch (error) {
     console.log(error);
     res.status(500).send("Internal Server Error");
@@ -156,7 +182,34 @@ app.put("/api/updateEmployee/:id", authenticate, async (req, res) => {
 
     const result = await pool.query(updateQuery);
 
-    res.status(200).send("SUCCESS!!");
+    const emailSubject = "Profile Updated";
+    const emailContent = `
+    <p>Dear ${employee_name},</p>
+    <p>Your profile has been successfully updated. Here are your updated details:</p>
+    <p>Name: ${employee_name}</p>
+    <p>Email: ${employee_email}</p>
+    <p>Designation: ${employee_designation}</p>
+    <p>Employee ID: ${employee_id}</p>
+    <p>Role: ${employee_role}</p>
+    <p>Please review the changes and let us know if anything needs further adjustment.</p>
+    <p><a href=${process.env.FRONTEND_URL}/employee-login>login to your employee account</a></p>
+    <p>Best regards,<br>Your Company</p>
+    `;
+
+    // Send email to the updated email address
+    const emailResponse = await sendEmail(
+      employee_email,
+      emailSubject,
+      emailContent
+    );
+
+    if (emailResponse.success) {
+      res
+        .status(200)
+        .send("Employee profile updated successfully and email sent!");
+    } else {
+      res.status(500).send("Failed to send email");
+    }
   } catch (error) {
     console.log(error);
     res.status(500).send("Internal Server Error");
