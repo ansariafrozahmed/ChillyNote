@@ -22,7 +22,7 @@ const Setting = () => {
             <nav
                 className={`${
                     (showCustomizer && 'ltr:!right-0 rtl:!left-0') || ''
-                } fixed bottom-0 top-0 z-[51] w-full max-w-[400px] bg-white p-4 shadow-[5px_0_25px_0_rgba(94,92,154,0.1)] transition-[right] duration-300 ltr:-right-[400px] rtl:-left-[400px] dark:bg-black`}
+                } fixed bottom-0 top-0 z-[51] w-full max-w-[400px] bg-white p-4 shadow-[5px_0_25px_0_rgba(94,92,154,0.1)] transition-[right] duration-300 dark:bg-black ltr:-right-[400px] rtl:-left-[400px]`}
             >
                 <button
                     type="button"
@@ -34,15 +34,15 @@ const Setting = () => {
 
                 <div className="perfect-scrollbar h-full overflow-y-auto overflow-x-hidden">
                     <div className="relative pb-5 text-center">
-                        <button type="button" className="absolute top-0 opacity-30 hover:opacity-100 ltr:right-0 rtl:left-0 dark:text-white" onClick={() => setShowCustomizer(false)}>
+                        <button type="button" className="absolute top-0 opacity-30 hover:opacity-100 dark:text-white ltr:right-0 rtl:left-0" onClick={() => setShowCustomizer(false)}>
                             <IconX className="h-5 w-5" />
                         </button>
 
-                        <h4 className="mb-1 dark:text-white">TEMPLATE CUSTOMIZER</h4>
+                        <h4 className="mb-1 dark:text-white">CUSTOMIZER</h4>
                         <p className="text-white-dark">Set preferences that will be cookied for your live preview demonstration.</p>
                     </div>
 
-                    <div className="mb-3 rounded-md border border-dashed border-white-light p-3 dark:border-[#1b2e4b]">
+                    {/* <div className="mb-3 rounded-md border border-dashed border-white-light p-3 dark:border-[#1b2e4b]">
                         <h5 className="mb-1 text-base leading-none dark:text-white">Color Scheme</h5>
                         <p className="text-xs text-white-dark">Overall light or dark presentation.</p>
                         <div className="mt-3 grid grid-cols-3 gap-2">
@@ -61,7 +61,7 @@ const Setting = () => {
                                 System
                             </button>
                         </div>
-                    </div>
+                    </div> */}
 
                     <div className="mb-3 rounded-md border border-dashed border-white-light p-3 dark:border-[#1b2e4b]">
                         <h5 className="mb-1 text-base leading-none dark:text-white">Navigation Position</h5>
@@ -126,7 +126,7 @@ const Setting = () => {
                         </div>
                     </div>
 
-                    <div className="mb-3 rounded-md border border-dashed border-white-light p-3 dark:border-[#1b2e4b]">
+                    {/* <div className="mb-3 rounded-md border border-dashed border-white-light p-3 dark:border-[#1b2e4b]">
                         <h5 className="mb-1 text-base leading-none dark:text-white">Direction</h5>
                         <p className="text-xs text-white-dark">Select the direction for your app.</p>
                         <div className="mt-3 flex gap-2">
@@ -138,7 +138,7 @@ const Setting = () => {
                                 RTL
                             </button>
                         </div>
-                    </div>
+                    </div> */}
 
                     <div className="mb-3 rounded-md border border-dashed border-white-light p-3 dark:border-[#1b2e4b]">
                         <h5 className="mb-1 text-base leading-none dark:text-white">Navbar Type</h5>

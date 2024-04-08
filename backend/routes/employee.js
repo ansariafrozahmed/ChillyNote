@@ -216,4 +216,24 @@ app.put("/api/updateEmployee/:id", authenticate, async (req, res) => {
   }
 });
 
+//GET Employee Details
+app.get("/api/getEmployeeDetails/:id", authenticate, async (req, res) => {
+  const { id } = req.params;
+
+  const query =
+    "SELECT uid, employee_name, employee_email, employee_designation FROM all_employees WHERE uid = $1";
+
+  try {
+    const result = await pool.query(query, [id]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).send("Admin details not found");
+    }
+    res.status(200).send(result.rows[0]);
+  } catch (error) {
+    console.error("Error fetching admin details:", error);
+    res.status(500).send("Error fetching admin details");
+  }
+});
+
 module.exports = app;
